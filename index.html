@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0b0e">
+<meta name="theme-color" content="#26345c">
 <meta name="description" content="Invitación a los XV años de Zoe Belén Vera Peña, 21 de noviembre de 2026. Noche de Fantasía.">
 <title>Mis XV años · Zoe Belén Vera Peña</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,18 +11,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
- --bg-1:#1a1a1f;--bg-2:#0b0b0e;
+ --bg-1:#26345c;--bg-2:#0d1428;
  --pearl:#f3f1f6;--silver:#d9d9e3;--silver-dim:#a9a5ba;--lavender:#c9c3dd;
  --line:rgba(214,210,228,.18);--glow:rgba(216,206,244,.28);
+ --night:#28324A;--violet:#716187;--teal:#568B88;
  --text:#efeef5;--muted:#b9b5c7;
  --dur-xs:180ms;--dur-sm:300ms;--dur-md:600ms;--dur-lg:900ms;
  --ease-out:cubic-bezier(.22,1,.36,1);--ease-soft:cubic-bezier(.45,0,.55,1);--stagger:80ms;--reveal-y:22px
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:linear-gradient(175deg,var(--bg-1) 0%,#121216 46%,var(--bg-2) 100%) fixed;color:var(--text);font-family:Montserrat,Arial,sans-serif;font-weight:300;font-size:15px;line-height:1.75;overflow-x:hidden}
+body{margin:0;background:linear-gradient(175deg,var(--bg-1) 0%,#1a2648 46%,var(--bg-2) 100%) fixed;color:var(--text);font-family:Montserrat,Arial,sans-serif;font-weight:300;font-size:15px;line-height:1.75;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.05;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E")}
 #stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+/* ===== AURORA BOREAL SUTIL (velos difusos, solo zona superior del hero) ===== */
+.aurora{position:absolute;left:50%;top:-14vh;width:100vw;max-width:100vw;height:66vh;transform:translateX(-50%);z-index:-1;pointer-events:none}
+.aurora i{position:absolute;display:block;border-radius:50%}
+.aurora .a1{left:-6%;top:0;width:72%;height:88%;background:radial-gradient(ellipse at 42% 42%,rgba(113,97,135,.30),transparent 68%);animation:auroraDrift1 34s ease-in-out infinite alternate}
+.aurora .a2{left:30%;top:-8%;width:76%;height:96%;background:radial-gradient(ellipse at 55% 45%,rgba(86,139,136,.22),transparent 66%);animation:auroraDrift2 46s ease-in-out infinite alternate}
+.aurora .a3{left:-14%;top:-6%;width:100%;height:74%;background:radial-gradient(ellipse at 50% 32%,rgba(48,62,102,.52),transparent 72%);animation:auroraDrift3 54s ease-in-out infinite alternate}
+@keyframes auroraDrift1{0%{transform:translate3d(0,0,0) scale(1);opacity:.8}50%{opacity:1}100%{transform:translate3d(4%,3%,0) scale(1.08);opacity:.85}}
+@keyframes auroraDrift2{0%{transform:translate3d(0,0,0) scale(1.04);opacity:.9}100%{transform:translate3d(-5%,2%,0) scale(.96);opacity:.72}}
+@keyframes auroraDrift3{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(3%,-2%,0) scale(1.05)}}
 a{color:inherit}button{cursor:pointer;font:inherit}
 .wrap{max-width:790px;padding:0 24px;margin:auto}
 .smallcaps{text-transform:uppercase;letter-spacing:.3em;font-size:.7rem;font-weight:500}
@@ -30,29 +40,31 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 .serif{font-family:'Cormorant Garamond',Georgia,serif}
 .script{font-family:'Great Vibes','Cormorant Garamond',Georgia,serif;font-weight:400}
 /* ===== TEXTO CON BRILLO METÁLICO (shimmer) ===== */
-.shine{background:linear-gradient(110deg,#a49fbc 0%,#d8d4e6 18%,#ffffff 34%,#efeaf9 46%,#b7b2cc 62%,#f2f0f8 80%,#9d98b4 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite;filter:drop-shadow(0 0 14px rgba(222,214,246,.22))}
+.shine{background:linear-gradient(110deg,#aba6c2 0%,#dbd7e8 18%,#ffffff 34%,#f0ebf9 46%,#bdb8d2 62%,#f3f1f9 80%,#a6a1bd 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite;filter:drop-shadow(0 0 14px rgba(222,214,246,.22))}
 @keyframes shimmer{0%{background-position:230% 0}100%{background-position:-30% 0}}
+/* Variante más luminosa para el nombre de Zoe y el XV (protagonistas) */
+.shine-strong{background:linear-gradient(110deg,#c9c4dc 0%,#f8f5fc 20%,#ffffff 36%,#f2edfa 50%,#d3cde6 66%,#fdfcff 82%,#b9b3d0 100%);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 9s linear infinite;filter:drop-shadow(0 0 18px rgba(233,230,237,.32))}
 .hairline{height:1px;width:190px;margin:26px auto;border:0;background:linear-gradient(90deg,transparent,#cfcbe0,transparent);background-size:200% 100%;animation:shineBg 4.5s linear infinite}
 @keyframes shineBg{0%{background-position:200% 0}100%{background-position:-200% 0}}
 /* ===== HERO ===== */
 .hero{text-align:center;min-height:100svh;padding:88px 0 70px;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;left:50%;top:6%;width:min(760px,130vw);height:520px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(201,195,221,.14),rgba(160,150,200,.06) 52%,transparent 74%);z-index:-1;pointer-events:none}
-.disco-wrap{position:relative;width:275px;max-width:64vw;margin:0 auto -50px;animation:discoIn var(--dur-lg) var(--ease-out) both}
-.disco-wrap::before{content:"";position:absolute;inset:-34%;border-radius:50%;background:radial-gradient(circle,rgba(214,204,242,.30),rgba(190,178,230,.12) 46%,transparent 70%);animation:haloPulse 4.2s ease-in-out infinite;pointer-events:none}
-@keyframes haloPulse{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.06)}}
+.hero::before{content:"";position:absolute;left:50%;top:6%;width:min(760px,130vw);height:520px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(201,195,221,.20),rgba(160,150,200,.09) 52%,transparent 74%);z-index:-1;pointer-events:none}
+.disco-wrap{position:relative;width:275px;max-width:64vw;margin:0 auto -14px;animation:discoIn var(--dur-lg) var(--ease-out) both}
+.disco-wrap::before{content:"";position:absolute;inset:-34%;border-radius:50%;background:radial-gradient(circle,rgba(214,204,242,.30),rgba(190,178,230,.14) 46%,transparent 70%);animation:haloPulse 6s ease-in-out infinite;pointer-events:none}
+@keyframes haloPulse{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:.85;transform:scale(1.04)}}
 @keyframes discoIn{from{opacity:0;transform:translateY(-30px) scale(.94)}to{opacity:1;transform:none}}
-.disco{width:100%;display:block;position:relative;z-index:1;animation:float 8s ease-in-out 900ms infinite;filter:drop-shadow(0 20px 34px rgba(0,0,0,.55)) drop-shadow(0 0 18px rgba(205,195,240,.18))}
+.disco{width:100%;display:block;position:relative;z-index:1;animation:float 8s ease-in-out 900ms infinite;filter:drop-shadow(0 20px 34px rgba(0,0,0,.5)) drop-shadow(0 0 26px rgba(205,195,240,.28))}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}}
-.overline{margin:16px auto 6px;color:var(--lavender)}
+.overline{margin:26px auto 8px;color:var(--lavender)}
 .xv{display:flex;align-items:center;justify-content:center;gap:20px;margin:0;font-family:'Cormorant Garamond',Georgia,serif}
 .xv .big{font-size:118px;line-height:1;font-weight:600}
 .xv .side{font-size:23px;letter-spacing:.05em;color:var(--silver)}
-.name{margin:2px 0 0;font-size:clamp(66px,11vw,104px);line-height:.95}
+.name{margin:26px 0 0;font-size:clamp(64px,10.5vw,100px);line-height:1.12}
 .name2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(45px,7.6vw,74px);line-height:1.08;margin-top:12px;font-weight:500}
 .hero-quote{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,3.6vw,30px);max-width:580px;margin:8px auto 30px;line-height:1.3;font-style:italic;color:var(--silver)}
 /* ===== CHISPAS ✦ ===== */
 .sparkle{position:absolute;pointer-events:none;color:#ece8f8;z-index:2}
-.sparkle::before{content:'✦';position:absolute;left:0;top:0;font-size:var(--s,13px);opacity:0;animation:twinkle 3.8s ease-in-out infinite;animation-delay:var(--d,0s);text-shadow:0 0 10px rgba(236,232,248,.9)}
+.sparkle::before{content:'✦';position:absolute;left:0;top:0;font-size:var(--s,13px);opacity:0;animation:twinkle var(--t,4.6s) ease-in-out infinite;animation-delay:var(--d,0s);text-shadow:0 0 10px rgba(236,232,248,.9)}
 @keyframes twinkle{0%,100%{opacity:0;transform:scale(.35) rotate(0deg)}50%{opacity:.95;transform:scale(1) rotate(50deg)}}
 /* ===== BOTONES ===== */
 .btn{border:1px solid rgba(211,206,228,.4);border-radius:999px;background:rgba(255,255,255,.05);color:var(--pearl);min-height:48px;padding:10px 30px;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;letter-spacing:.15em;text-transform:uppercase;font-size:11px;font-weight:500;transition:transform var(--dur-xs) var(--ease-out),box-shadow var(--dur-xs) var(--ease-out),background var(--dur-xs) var(--ease-out),border-color var(--dur-xs)}
@@ -61,7 +73,8 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 .btn.primary{background:linear-gradient(135deg,#ece9f4,#c3bfd6);border-color:transparent;color:#17161d;font-weight:600}
 .btn.primary:hover{box-shadow:0 0 32px rgba(226,218,248,.42),0 12px 32px rgba(0,0,0,.5)}
 /* ===== SECCIONES / TARJETAS ===== */
-.section{padding:44px 0 78px;text-align:center}
+.section{padding:44px 0 78px;text-align:center;position:relative}
+.section-glow::before{content:"";position:absolute;left:50%;top:-30px;width:min(680px,100vw);height:240px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(113,97,135,.16),rgba(86,139,136,.08) 55%,transparent 75%);pointer-events:none;z-index:-1}
 .section h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(46px,7.6vw,70px);font-weight:600;line-height:1.05;margin:8px 0 22px}
 .section-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:25px;line-height:1.32;max-width:600px;margin:0 auto 24px;color:var(--silver)}
 .card{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035));border-radius:26px;box-shadow:0 26px 70px rgba(0,0,0,.5);padding:38px 40px;position:relative;backdrop-filter:blur(6px)}
@@ -107,7 +120,8 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 .status{display:none;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:19px 0 0;background:rgba(255,255,255,.05);font-size:13px;color:var(--silver);text-align:left}
 .status.show{display:block}
 /* Footer */
-.footer{padding:54px 12px 62px;text-align:center;border-top:1px solid var(--line)}
+.footer{padding:54px 12px 62px;text-align:center;border-top:1px solid var(--line);position:relative}
+.footer::before{content:"";position:absolute;left:50%;top:-24px;width:min(560px,100vw);height:190px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(113,97,135,.14),transparent 72%);pointer-events:none;z-index:-1}
 .footer .script{font-size:50px}
 .footer .serif{font-size:22px;color:var(--silver)}
 .footer small{color:var(--muted);letter-spacing:.07em;display:block;margin-top:8px}
@@ -134,7 +148,7 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 .reveal.is-visible .hairline{transform:scaleX(1)}
 .status.show{animation:heroIn var(--dur-sm) var(--ease-out)}
 /* Música */
-.music-toggle{position:fixed;right:18px;bottom:18px;z-index:40;width:56px;height:56px;border-radius:50%;border:1px solid rgba(216,210,234,.45);background:rgba(28,27,36,.72);backdrop-filter:blur(10px);color:var(--pearl);font-size:22px;display:grid;place-items:center;box-shadow:0 0 20px rgba(216,206,244,.16),0 10px 28px rgba(0,0,0,.5);transition:transform var(--dur-xs) var(--ease-out),box-shadow var(--dur-xs);animation:heroIn var(--dur-md) var(--ease-out) 1200ms both}
+.music-toggle{position:fixed;right:18px;bottom:18px;z-index:40;width:56px;height:56px;border-radius:50%;border:1px solid rgba(216,210,234,.45);background:rgba(24,32,58,.72);backdrop-filter:blur(10px);color:var(--pearl);font-size:22px;display:grid;place-items:center;box-shadow:0 0 20px rgba(216,206,244,.16),0 10px 28px rgba(0,0,0,.5);transition:transform var(--dur-xs) var(--ease-out),box-shadow var(--dur-xs);animation:heroIn var(--dur-md) var(--ease-out) 1200ms both}
 .music-toggle:hover{transform:translateY(-2px);box-shadow:0 0 30px var(--glow),0 12px 30px rgba(0,0,0,.55)}
 .music-toggle:active{transform:scale(.94)}
 .music-toggle::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(216,206,244,.5);animation:pulseRing 2.4s var(--ease-soft) infinite;pointer-events:none}
@@ -149,9 +163,9 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 /* Responsive */
 @media(max-width:640px){
  .hero{min-height:auto;padding:56px 0 48px}
- .disco-wrap{width:240px;margin-bottom:-46px}
+ .disco-wrap{width:240px;margin-bottom:-12px}
  .xv .big{font-size:94px}.xv .side{font-size:19px}.xv{gap:13px}
- .name{font-size:clamp(62px,15vw,96px)}.name2{font-size:clamp(47px,11.6vw,66px)}
+ .name{font-size:clamp(60px,14vw,92px)}.name2{font-size:clamp(45px,11vw,64px)}
  .card{padding:27px 22px;border-radius:20px}
  .section{padding:34px 0 58px}
  .family{grid-template-columns:1fr;gap:25px}
@@ -160,6 +174,7 @@ a{color:inherit}button{cursor:pointer;font:inherit}
  .time-row{grid-template-columns:85px 1fr;gap:10px}.time-row time{font-size:25px}.time-row span{font-size:12px}
  .section h2{font-size:52px}.wrap{padding:0 16px}.hero-quote{padding:0 12px}
  .calendar .dates{font-size:24px}
+ .aurora{opacity:.75}
 }
 /* Movimiento reducido */
 @media(prefers-reduced-motion:reduce){
@@ -170,8 +185,7 @@ a{color:inherit}button{cursor:pointer;font:inherit}
  .disco{animation:none!important}
  .music-toggle{animation:none!important}.music-toggle::after{display:none!important}
  .sparkle::before{animation:none!important;opacity:.5!important}
- .shine{animation:none!important}
- #stars{display:none}
+ .shine,.shine-strong{animation:none!important}
 }
 </style>
 <noscript><style>.reveal,.reveal-item{opacity:1;transform:none}</style></noscript>
@@ -180,15 +194,15 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 <canvas id="stars" aria-hidden="true"></canvas>
 <main>
 <section class="hero wrap" id="inicio">
- <span class="sparkle" style="left:12%;top:26%;--s:15px;--d:.2s" aria-hidden="true"></span>
- <span class="sparkle" style="left:20%;top:58%;--s:10px;--d:1.4s" aria-hidden="true"></span>
- <span class="sparkle" style="right:14%;top:30%;--s:17px;--d:.9s" aria-hidden="true"></span>
- <span class="sparkle" style="right:22%;top:64%;--s:11px;--d:2.1s" aria-hidden="true"></span>
- <span class="sparkle" style="left:47%;top:12%;--s:12px;--d:2.8s" aria-hidden="true"></span>
- <div class="disco-wrap"><img class="disco" src="assets/esfera-espejo.png" alt="Esfera de espejos plateada" width="275" height="275"></div>
+ <div class="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+ <span class="sparkle" style="left:9%;top:24%;--s:14px;--d:.2s;--t:5.2s" aria-hidden="true"></span>
+ <span class="sparkle" style="right:8%;top:28%;--s:16px;--d:1.6s;--t:6.4s" aria-hidden="true"></span>
+ <span class="sparkle" style="left:15%;top:72%;--s:10px;--d:2.6s;--t:5.8s" aria-hidden="true"></span>
+ <span class="sparkle" style="right:14%;top:74%;--s:12px;--d:.9s;--t:7s" aria-hidden="true"></span>
+ <div class="disco-wrap"><img class="disco" src="assets/esfera-espejo.png" alt="Esfera de espejos plateada" width="275" height="275"><span class="sparkle" style="left:-16px;top:38px;--s:12px;--d:1.2s;--t:7.5s" aria-hidden="true"></span><span class="sparkle" style="right:-12px;bottom:56px;--s:10px;--d:3.6s;--t:9s" aria-hidden="true"></span></div>
  <div class="overline smallcaps anim" style="--d:0ms">Estás invitado a celebrar</div>
- <h1 class="xv anim" style="--d:120ms"><span class="side">MIS</span><span class="big shine">XV</span><span class="side">AÑOS</span></h1>
- <div class="name script name-anim shine" style="--d:280ms">Zoe Belén</div><div class="name2 anim shine" style="--d:440ms">Vera Peña</div>
+ <h1 class="xv anim" style="--d:120ms"><span class="side">MIS</span><span class="big shine shine-strong">XV</span><span class="side">AÑOS</span></h1>
+ <div class="name script name-anim shine shine-strong" style="--d:280ms">Zoe Belén</div><div class="name2 anim shine" style="--d:440ms">Vera Peña</div>
  <div class="hairline" style="--d:700ms"></div>
  <p class="hero-quote anim" style="--d:900ms">Con inmensa alegría y la bendición de Dios, quiero compartir contigo una noche inolvidable, llena de amor y momentos especiales.</p>
  <a href="#historia" class="btn anim" style="--d:1050ms">Descubre mi invitación <span aria-hidden="true">↓</span></a>
@@ -203,12 +217,12 @@ a{color:inherit}button{cursor:pointer;font:inherit}
  </div>
 </section>
 
-<section class="section wrap reveal" id="fecha">
+<section class="section wrap reveal section-glow" id="fecha">
  <span class="eyebrow">Reserva esta fecha</span><h2 class="shine">El gran día</h2>
  <div class="card date-panel">
   <div class="day shine">21</div><div class="month">noviembre · 2026</div><div class="smallcaps" style="margin-top:6px;color:var(--lavender)">Sábado</div>
   <div class="calendar" aria-label="Semana del 16 al 22 de noviembre de 2026">
-   <span class="sparkle day-spark" style="--s:15px;--d:.6s" aria-hidden="true"></span>
+   <span class="sparkle day-spark" style="--s:15px;--d:.6s;--t:6.5s" aria-hidden="true"></span><span class="sparkle" style="left:-12px;bottom:-4px;--s:9px;--d:2.4s;--t:8.5s" aria-hidden="true"></span>
    <div class="days"><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span></div>
    <div class="dates"><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span class="selected">21</span><span>22</span></div>
   </div>
@@ -236,9 +250,9 @@ a{color:inherit}button{cursor:pointer;font:inherit}
  <div class="card"><div class="pass-number shine">2</div><div class="smallcaps" style="color:var(--lavender)">Personas por invitación</div><p class="pass-note" style="margin-top:18px">Al confirmar al grupo, indica cuántas personas asistirán y sus nombres.</p></div>
 </section>
 
-<section class="section wrap reveal" id="confirmar">
+<section class="section wrap reveal section-glow" id="confirmar">
  <span class="eyebrow">Tu presencia es importante</span><h2 class="shine">Asistencia</h2>
- <div class="card"><p class="section-text">¡Te espero para celebrar juntos!</p>
+ <div class="card"><span class="sparkle" style="right:18px;top:16px;--s:11px;--d:1.9s;--t:7.5s" aria-hidden="true"></span><p class="section-text">¡Te espero para celebrar juntos!</p>
  <a class="btn primary" id="confirmBtn" href="#" target="_blank" rel="noopener noreferrer">Confirmar asistencia ↗</a>
  <div class="status" id="rsvpStatus" role="status" aria-live="polite"></div>
  <p class="tiny" style="margin-top:16px">El botón te lleva directo al grupo de WhatsApp de la celebración.</p></div>
@@ -268,18 +282,19 @@ updateCountdown();setInterval(updateCountdown,1000);
 function initReveal(){const els=Array.from(document.querySelectorAll('.reveal'));if(reducedMotion||!('IntersectionObserver' in window)){els.forEach(el=>el.classList.add('is-visible'));return;}const io=new IntersectionObserver(entries=>{entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('is-visible');io.unobserve(en.target);}});},{threshold:.15,rootMargin:'0px 0px -10% 0px'});els.forEach(el=>{el.querySelectorAll('.reveal-item').forEach((c,i)=>c.style.setProperty('--i',Math.min(i,5)));io.observe(el);});}
 function initReducedMotionGuard(){if(reducedMotion){document.documentElement.classList.add('reduced');document.querySelectorAll('.reveal').forEach(el=>el.classList.add('is-visible'));}}
 initReveal();initReducedMotionGuard();
-/* ===== POLVO DE ESTRELLAS (canvas) ===== */
-// Partículas tenues que flotan y titilean. Densidad baja en móvil; se pausa con la pestaña oculta.
+/* ===== CIELO ESTRELLADO (canvas) ===== */
+// Estrellas fijas que titilean de forma lenta y asincrónica (sin lluvia ni cruce de pantalla).
+// Densidad baja en móvil; unas pocas más brillantes con halo tenue; se pausa con la pestaña oculta.
 (function(){
  const cv=document.getElementById('stars');if(!cv)return;const ctx=cv.getContext('2d');
  const dpr=Math.min(window.devicePixelRatio||1,2);let W,H,ps=[],raf=null,t=0;
- function spawn(){const n=reducedMotion?0:Math.round(Math.min(90,(innerWidth*innerHeight)/16000));ps=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,r:(Math.random()*1.1+.4)*dpr,v:(Math.random()*.14+.04)*dpr,f:Math.random()*.0016+.0007,p:Math.random()*Math.PI*2,a:Math.random()*.32+.18}));}
+ function spawn(){const n=Math.round(Math.min(95,(innerWidth*innerHeight)/10500));ps=Array.from({length:n},()=>{const b=Math.random()<.14;return{x:Math.random()*W,y:Math.random()*H,r:(b?Math.random()*.8+1.5:Math.random()*.9+.4)*dpr,f:Math.random()*.0011+.0004,p:Math.random()*Math.PI*2,a:(b?Math.random()*.3+.6:Math.random()*.3+.24),b:b};});}
  function resize(){W=cv.width=Math.round(innerWidth*dpr);H=cv.height=Math.round(innerHeight*dpr);spawn();}
- function draw(){ctx.clearRect(0,0,W,H);t++;for(const s of ps){s.y-=s.v;if(s.y<-4){s.y=H+4;s.x=Math.random()*W;}const al=s.a*(.55+.45*Math.sin(t*s.f+s.p));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.2832);ctx.fillStyle='rgba(228,224,244,'+al.toFixed(3)+')';ctx.fill();}}
- function loop(){if(document.hidden){raf=null;return;}draw();raf=requestAnimationFrame(loop);}
- document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!raf)raf=requestAnimationFrame(loop);});
+ function draw(k){k=k||1;ctx.clearRect(0,0,W,H);for(const s of ps){const tw=reducedMotion?1:(.5+.5*Math.sin(t*s.f+s.p));const al=s.a*tw*k;if(s.b){ctx.beginPath();ctx.arc(s.x,s.y,s.r*2.6,0,6.2832);ctx.fillStyle='rgba(202,196,232,'+(al*.32).toFixed(3)+')';ctx.fill();}ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.2832);ctx.fillStyle='rgba(233,229,246,'+al.toFixed(3)+')';ctx.fill();}}
+ function loop(){if(document.hidden){raf=null;return;}t++;draw();raf=requestAnimationFrame(loop);}
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!raf&&!reducedMotion)raf=requestAnimationFrame(loop);});
  window.addEventListener('resize',resize,{passive:true});
- resize();if(reducedMotion){draw();}else{raf=requestAnimationFrame(loop);}
+ resize();if(reducedMotion){draw(.7);}else{raf=requestAnimationFrame(loop);}
 })();
 /* ===== MÚSICA ===== */
 // Botón flotante: reproduce/pausa. Si falta el archivo, avisa sin romper nada.
