@@ -229,7 +229,7 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 <canvas id="stars" aria-hidden="true"></canvas>
 <div class="orbs" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i><i class="s1"></i><i class="s2"></i><i class="s3"></i></div>
 <main>
-<section class="hero" id="inicio">
+<section class="hero wrap" id="inicio">
  <div class="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
  <div class="floor" aria-hidden="true"></div>
  <span class="sparkle" style="left:9%;top:24%;--s:14px;--d:.2s;--t:5.2s" aria-hidden="true"></span>
@@ -412,27 +412,42 @@ initReveal();initReducedMotionGuard();
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)start();});
 })();
 /* ===== MÚSICA ===== */
-// Reproducción AUTOMÁTICA al abrir la invitación. Los navegadores bloquean el audio
-// sin interacción: si el intento es bloqueado, la música arranca sola con el primer
-// toque en la pantalla. El botón ♪ sigue sirviendo para pausar/reanudar.
+// Reproducción AUTOMÁTICA garantizada: 1) intenta sonar de inmediato al abrir;
+// 2) si el navegador bloquea el audio sin interacción, la canción IGUAL arranca
+// sola (en silencio, técnica de autoplay silenciado, que sí permiten todos los
+// navegadores) y el sonido se activa con el PRIMER toque en cualquier parte de
+// la pantalla. El botón ♪ sirve para pausar/reanudar.
 const musicBtn=document.getElementById('musicToggle'),music=document.getElementById('bg-music'),musicHint=document.getElementById('musicHint');
 if(CONFIG.cancion){music.src=CONFIG.cancion;}
-let hintTimer=null,musicError=false,userPaused=false,musicStarted=false;
+let hintTimer=null,musicError=false,userPaused=false,musicStarted=false,silentStart=false;
 function showHint(msg){musicHint.textContent=msg;musicHint.classList.add('show');clearTimeout(hintTimer);hintTimer=setTimeout(()=>musicHint.classList.remove('show'),4200);}
 function setBtn(on){musicBtn.setAttribute('aria-pressed',on?'true':'false');musicBtn.setAttribute('aria-label',(on?'Pausar':'Reproducir')+' música: '+CONFIG.cancionTitulo);}
-const gestos=['pointerdown','touchstart','keydown'];
+const gestos=['pointerdown','touchstart','keydown','scroll'];
 function stopListening(){gestos.forEach(ev=>document.removeEventListener(ev,unlock,true));}
 async function startMusic(){
  if(musicError||userPaused||!music.paused)return;
- try{await music.play();musicStarted=true;setBtn(true);}
- catch(err){/* Autoplay bloqueado por el navegador: se reintenta al primer toque */
- if(!musicStarted)showHint('Toca la pantalla para activar la música ♪');}
+ music.muted=false; /* limpia cualquier silencio de un intento anterior */
+ try{await music.play();musicStarted=true;silentStart=false;setBtn(true);}
+ catch(err){
+  /* Autoplay con sonido bloqueado → arranca silenciado (permitido) y suena al primer toque */
+  try{music.muted=true;await music.play();musicStarted=true;silentStart=true;setBtn(true);
+      showHint('Toca la pantalla para escuchar la música ♪');}
+  catch(err2){if(!musicStarted)showHint('Toca la pantalla para activar la música ♪');}
+ }
 }
-function unlock(){startMusic().then(()=>{if(musicStarted)stopListening();});}
+function unlock(){
+ if(musicStarted&&music.muted){music.muted=false;silentStart=false;stopListening();return;}
+ startMusic().then(()=>{if(musicStarted&&!music.muted)stopListening();});
+}
 gestos.forEach(ev=>document.addEventListener(ev,unlock,{capture:true,passive:true}));
 document.addEventListener('DOMContentLoaded',startMusic);
-window.addEventListener('load',()=>setTimeout(startMusic,400));
-musicBtn.addEventListener('click',async()=>{try{if(music.paused){userPaused=false;await music.play();musicStarted=true;setBtn(true);stopListening();}else{userPaused=true;music.pause();setBtn(false);}}catch(err){showHint('No se pudo reproducir. Verifica que exista el archivo de la canción.');}});
+window.addEventListener('load',()=>setTimeout(startMusic,300));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(startMusic,200);});
+musicBtn.addEventListener('click',async()=>{try{
+ if(music.paused){userPaused=false;music.muted=false;await music.play();musicStarted=true;setBtn(true);stopListening();}
+ else if(music.muted){music.muted=false;silentStart=false;stopListening();} /* sin sonido aún → primer toque activa el audio */
+ else{userPaused=true;music.pause();setBtn(false);}
+}catch(err){showHint('No se pudo reproducir. Verifica que exista el archivo de la canción.');}});
 music.addEventListener('error',()=>{musicError=true;stopListening();musicBtn.classList.add('is-off');showHint('Falta la canción: guarda tu tema de Carla Morrison como assets/cancion.mp3.');});
 /* ===== CONFIRMACIÓN ===== */
 // Un solo botón que abre el grupo de WhatsApp; si falta el enlace, avisa.
