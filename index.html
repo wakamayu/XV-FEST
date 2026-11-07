@@ -292,9 +292,9 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 <section class="section wrap reveal section-glow" id="confirmar">
  <span class="eyebrow">Tu presencia es importante</span><h2 class="shine">Asistencia</h2>
  <div class="card"><span class="sparkle" style="right:18px;top:16px;--s:11px;--d:1.9s;--t:7.5s" aria-hidden="true"></span><p class="section-text">¡Te espero para celebrar juntos!</p>
- <a class="btn primary" id="confirmBtn" href="#" target="_blank" rel="noopener noreferrer">Confirmar asistencia ↗</a>
+ <a class="btn primary" id="confirmBtn" href="#">Confirmar asistencia ↗</a>
  <div class="status" id="rsvpStatus" role="status" aria-live="polite"></div>
- <p class="tiny" style="margin-top:16px">El botón abre WhatsApp con tu confirmación ya escrita, lista para enviar. ¿Aún no estás en el grupo? <a id="groupLink" href="#" target="_blank" rel="noopener noreferrer" style="color:var(--lavender);text-decoration:underline">Únete aquí</a></p></div>
+ <p class="tiny" style="margin-top:16px">El botón te lleva directo al grupo de WhatsApp de la celebración. ¿Prefieres escribir por chat? <a id="chatLink" href="#" style="color:var(--lavender);text-decoration:underline">Envía tu confirmación aquí</a></p></div>
 </section>
 </main>
 
@@ -307,12 +307,12 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 <script>
 'use strict';
 // CONFIG → personaliza aquí:
-// 1) whatsappNumero: teléfono de WhatsApp con código de país, SIN «+» ni «00»
-//    (p. ej. Perú: 51 seguido del número). El botón abre el chat con el mensaje ya escrito.
-// 2) whatsappTexto: mensaje pre-llenado que enviará el invitado.
-// 3) whatsappGrupo: enlace de invitación al grupo (WhatsApp → Grupo → Invitar mediante enlace).
-// 4) cancion: ruta del audio (descarga tu tema de Carla Morrison y guárdalo como assets/cancion.mp3).
-// 5) cancionTitulo: nombre visible para lectores de pantalla y avisos.
+// 1) whatsappGrupo: enlace de invitación al grupo (WhatsApp → Grupo → Invitar mediante enlace).
+//    Es el destino del botón "Confirmar asistencia".
+// 2) whatsappNumero / whatsappTexto: chat directo opcional (botón secundario
+//    "Envía tu confirmación aquí"); teléfono con código de país, sin «+» ni «00».
+// 3) cancion: ruta del audio (descarga tu tema de Carla Morrison y guárdalo como assets/cancion.mp3).
+// 4) cancionTitulo: nombre visible para lectores de pantalla y avisos.
 const CONFIG={whatsappNumero:'0051973670684',whatsappTexto:'Hola, confirmo mi asistencia a los XV años de Zoe Belén Vera Peña. Asistiremos 2 personas.',whatsappGrupo:'https://chat.whatsapp.com/CcjLAp8Vs3x2Zl1NP0ql4Z?s=sh&p=a&iam=2',cancion:'assets/cancion.mp3',cancionTitulo:'Disfruto · Carla Morrison'};
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const eventTime=new Date('2026-12-05T19:00:00-05:00').getTime();
@@ -453,16 +453,24 @@ musicBtn.addEventListener('click',async()=>{try{
 }catch(err){showHint('No se pudo reproducir. Verifica que exista el archivo de la canción.');}});
 music.addEventListener('error',()=>{musicError=true;stopListening();musicBtn.classList.add('is-off');showHint('Falta la canción: guarda tu tema de Carla Morrison como assets/cancion.mp3.');});
 /* ===== CONFIRMACIÓN ===== */
-// El botón abre WhatsApp con el número y el mensaje pre-llenado; el enlace
-// secundario lleva al grupo de la celebración. Si falta todo, avisa.
-const confirmBtn=document.getElementById('confirmBtn'),groupLink=document.getElementById('groupLink'),rsvpStatus=document.getElementById('rsvpStatus');
+// El botón principal lleva al GRUPO de WhatsApp. Navegación en la MISMA pestaña
+// por JS (window.location): el método más confiable en móviles y navegadores
+// internos de apps, donde target="_blank" a veces se bloquea. El enlace
+// secundario abre un chat directo con el mensaje ya escrito.
+const confirmBtn=document.getElementById('confirmBtn'),chatLink=document.getElementById('chatLink'),rsvpStatus=document.getElementById('rsvpStatus');
 const waNumero=(CONFIG.whatsappNumero||'').replace(/\D/g,'').replace(/^0+/,'');
 const waTexto=encodeURIComponent(CONFIG.whatsappTexto||'Hola, confirmo mi asistencia a los XV años de Zoe Belén.');
-if(CONFIG.whatsappGrupo){confirmBtn.href=CONFIG.whatsappGrupo;}
-else if(waNumero){confirmBtn.href='https://wa.me/'+waNumero+'?text='+waTexto;}else{confirmBtn.addEventListener('click',e=>{e.preventDefault();rsvpStatus.classList.add('show');rsvpStatus.textContent='Falta configurar WhatsApp: edita CONFIG.whatsappNumero en index.html.';});}
-if(groupLink){
- if(CONFIG.whatsappGrupo){groupLink.href=CONFIG.whatsappGrupo;}
- else{groupLink.parentElement.style.display='none';}
+const waChat=waNumero?('https://wa.me/'+waNumero+'?text='+waTexto):'';
+const grupoUrl=(CONFIG.whatsappGrupo||'').trim();
+function abrir(url){window.location.href=url;}
+if(grupoUrl||waChat){
+ confirmBtn.href=grupoUrl||waChat;
+ confirmBtn.addEventListener('click',e=>{e.preventDefault();abrir(grupoUrl||waChat);});
+}
+else{confirmBtn.addEventListener('click',e=>{e.preventDefault();rsvpStatus.classList.add('show');rsvpStatus.textContent='Falta configurar WhatsApp: edita CONFIG.whatsappGrupo en index.html.';});}
+if(chatLink){
+ if(waChat){chatLink.href=waChat;chatLink.addEventListener('click',e=>{e.preventDefault();abrir(waChat);});}
+ else{chatLink.parentElement.style.display='none';}
 }
 </script>
 </body></html>
