@@ -195,6 +195,9 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 .music-toggle.is-off{opacity:.55}
 .music-hint{position:fixed;right:18px;bottom:84px;z-index:40;max-width:250px;background:rgba(238,235,246,.95);color:#1b1a22;font-size:12px;line-height:1.5;padding:10px 14px;border-radius:12px;opacity:0;transform:translateY(8px);transition:opacity var(--dur-sm) var(--ease-out),transform var(--dur-sm) var(--ease-out);pointer-events:none;text-align:left}
 .music-hint.show{opacity:1;transform:none}
+/* Aviso de texto copiado (confirmación) */
+.copy-toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,8px);max-width:min(430px,86vw);z-index:45;background:rgba(238,235,246,.96);color:#1b1a22;font-size:12.5px;line-height:1.5;padding:11px 16px;border-radius:14px;opacity:0;pointer-events:none;transition:opacity var(--dur-sm) var(--ease-out),transform var(--dur-sm) var(--ease-out);box-shadow:0 14px 40px rgba(0,0,0,.5);text-align:center}
+.copy-toast.show{opacity:1;transform:translate(-50%,0)}
 /* Responsive */
 @media(max-width:640px){
  .hero{min-height:auto;padding:56px 0 48px}
@@ -303,6 +306,7 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 <audio id="bg-music" src="assets/cancion.mp3" loop preload="auto"></audio>
 <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="Reproducir música: Disfruto, de Carla Morrison"><span class="disc" aria-hidden="true">♪</span></button>
 <div class="music-hint" id="musicHint" role="status" aria-live="polite"></div>
+<div class="copy-toast" id="copyToast" role="status" aria-live="polite"></div>
 
 <script>
 'use strict';
@@ -453,19 +457,43 @@ musicBtn.addEventListener('click',async()=>{try{
 }catch(err){showHint('No se pudo reproducir. Verifica que exista el archivo de la canción.');}});
 music.addEventListener('error',()=>{musicError=true;stopListening();musicBtn.classList.add('is-off');showHint('Falta la canción: guarda tu tema de Carla Morrison como assets/cancion.mp3.');});
 /* ===== CONFIRMACIÓN ===== */
-// El botón principal lleva al GRUPO de WhatsApp. Navegación en la MISMA pestaña
-// por JS (window.location): el método más confiable en móviles y navegadores
-// internos de apps, donde target="_blank" a veces se bloquea. El enlace
-// secundario abre un chat directo con el mensaje ya escrito.
-const confirmBtn=document.getElementById('confirmBtn'),chatLink=document.getElementById('chatLink'),rsvpStatus=document.getElementById('rsvpStatus');
+// El botón principal lleva al GRUPO de WhatsApp. Como los enlaces de grupo no
+// admiten mensaje pre-escrito, al tocar el botón el texto de confirmación se
+// COPIA al portapapeles y se avisa "pega en el grupo". Navegación en la MISMA
+// pestaña por JS: el método más confiable en móviles y navegadores internos.
+const confirmBtn=document.getElementById('confirmBtn'),chatLink=document.getElementById('chatLink'),rsvpStatus=document.getElementById('rsvpStatus'),copyToast=document.getElementById('copyToast');
 const waNumero=(CONFIG.whatsappNumero||'').replace(/\D/g,'').replace(/^0+/,'');
-const waTexto=encodeURIComponent(CONFIG.whatsappTexto||'Hola, confirmo mi asistencia a los XV años de Zoe Belén.');
+const waTexto=encodeURIComponent(CONFIG.whatsappTexto||'');
+const textoConfirm=(CONFIG.whatsappTexto||'').trim();
 const waChat=waNumero?('https://wa.me/'+waNumero+'?text='+waTexto):'';
 const grupoUrl=(CONFIG.whatsappGrupo||'').trim();
 function abrir(url){window.location.href=url;}
+let toastTimer=null;
+function mostrarToast(msg){copyToast.textContent=msg;copyToast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>copyToast.classList.remove('show'),4500);}
+function copiarTexto(txt){
+ if(navigator.clipboard&&navigator.clipboard.writeText){
+  return navigator.clipboard.writeText(txt).catch(()=>copiarFallback(txt));
+ }
+ return Promise.resolve(copiarFallback(txt));
+}
+function copiarFallback(txt){
+ const ta=document.createElement('textarea');ta.value=txt;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;opacity:0;top:0;left:0';document.body.appendChild(ta);ta.focus();ta.select();
+ let ok=false;try{ok=document.execCommand('copy');}catch(e){}
+ document.body.removeChild(ta);
+ if(!ok)throw new Error('copy-failed');
+}
 if(grupoUrl||waChat){
  confirmBtn.href=grupoUrl||waChat;
- confirmBtn.addEventListener('click',e=>{e.preventDefault();abrir(grupoUrl||waChat);});
+ confirmBtn.addEventListener('click',e=>{
+  e.preventDefault();
+  const destino=grupoUrl||waChat;
+  if(textoConfirm){
+   Promise.resolve().then(()=>copiarTexto(textoConfirm))
+    .then(()=>mostrarToast('✓ Mensaje copiado. Al entrar al grupo, mantenlo pulsado y pega para confirmar'))
+    .catch(()=>{if(waChat){abrir(waChat);return;}mostrarToast('Entra al grupo y escribe tu confirmación');});
+   setTimeout(()=>abrir(destino),900);
+  }else{abrir(destino);}
+ });
 }
 else{confirmBtn.addEventListener('click',e=>{e.preventDefault();rsvpStatus.classList.add('show');rsvpStatus.textContent='Falta configurar WhatsApp: edita CONFIG.whatsappGrupo en index.html.';});}
 if(chatLink){
