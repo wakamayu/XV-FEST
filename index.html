@@ -458,9 +458,8 @@ music.addEventListener('error',()=>{musicError=true;stopListening();musicBtn.cla
 const confirmBtn=document.getElementById('confirmBtn'),groupLink=document.getElementById('groupLink'),rsvpStatus=document.getElementById('rsvpStatus');
 const waNumero=(CONFIG.whatsappNumero||'').replace(/\D/g,'').replace(/^0+/,'');
 const waTexto=encodeURIComponent(CONFIG.whatsappTexto||'Hola, confirmo mi asistencia a los XV años de Zoe Belén.');
-if(waNumero){confirmBtn.href='https://wa.me/'+waNumero+'?text='+waTexto;}
-else if(CONFIG.whatsappGrupo){confirmBtn.href=CONFIG.whatsappGrupo;}
-else{confirmBtn.addEventListener('click',e=>{e.preventDefault();rsvpStatus.classList.add('show');rsvpStatus.textContent='Falta configurar WhatsApp: edita CONFIG.whatsappNumero en index.html.';});}
+if(CONFIG.whatsappGrupo){confirmBtn.href=CONFIG.whatsappGrupo;}
+else if(waNumero){confirmBtn.href='https://wa.me/'+waNumero+'?text='+waTexto;}else{confirmBtn.addEventListener('click',e=>{e.preventDefault();rsvpStatus.classList.add('show');rsvpStatus.textContent='Falta configurar WhatsApp: edita CONFIG.whatsappNumero en index.html.';});}
 if(groupLink){
  if(CONFIG.whatsappGrupo){groupLink.href=CONFIG.whatsappGrupo;}
  else{groupLink.parentElement.style.display='none';}
