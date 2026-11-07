@@ -195,9 +195,6 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 .music-toggle.is-off{opacity:.55}
 .music-hint{position:fixed;right:18px;bottom:84px;z-index:40;max-width:250px;background:rgba(238,235,246,.95);color:#1b1a22;font-size:12px;line-height:1.5;padding:10px 14px;border-radius:12px;opacity:0;transform:translateY(8px);transition:opacity var(--dur-sm) var(--ease-out),transform var(--dur-sm) var(--ease-out);pointer-events:none;text-align:left}
 .music-hint.show{opacity:1;transform:none}
-/* Aviso de texto copiado (confirmación) */
-.copy-toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,8px);max-width:min(430px,86vw);z-index:45;background:rgba(238,235,246,.96);color:#1b1a22;font-size:12.5px;line-height:1.5;padding:11px 16px;border-radius:14px;opacity:0;pointer-events:none;transition:opacity var(--dur-sm) var(--ease-out),transform var(--dur-sm) var(--ease-out);box-shadow:0 14px 40px rgba(0,0,0,.5);text-align:center}
-.copy-toast.show{opacity:1;transform:translate(-50%,0)}
 /* Responsive */
 @media(max-width:640px){
  .hero{min-height:auto;padding:56px 0 48px}
@@ -289,7 +286,7 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 
 <section class="section wrap reveal" id="pases">
  <span class="eyebrow">Invitación personal</span><h2 class="shine">Pases</h2>
- <div class="card"><div class="pass-number shine">2</div><div class="smallcaps" style="color:var(--lavender)">Personas por invitación</div><p class="pass-note" style="margin-top:18px">Al confirmar al grupo, indica cuántas personas asistirán y sus nombres.</p></div>
+ <div class="card"><div class="pass-number shine">2</div><div class="smallcaps" style="color:var(--lavender)">Personas por invitación</div><p class="pass-note" style="margin-top:18px">Al confirmar, indica cuántas personas asistirán y sus nombres.</p></div>
 </section>
 
 <section class="section wrap reveal section-glow" id="confirmar">
@@ -297,7 +294,7 @@ a{color:inherit}button{cursor:pointer;font:inherit}
  <div class="card"><span class="sparkle" style="right:18px;top:16px;--s:11px;--d:1.9s;--t:7.5s" aria-hidden="true"></span><p class="section-text">¡Te espero para celebrar juntos!</p>
  <a class="btn primary" id="confirmBtn" href="#">Confirmar asistencia ↗</a>
  <div class="status" id="rsvpStatus" role="status" aria-live="polite"></div>
- <p class="tiny" style="margin-top:16px">El botón te lleva directo al grupo de WhatsApp de la celebración. ¿Prefieres escribir por chat? <a id="chatLink" href="#" style="color:var(--lavender);text-decoration:underline">Envía tu confirmación aquí</a></p></div>
+ <p class="tiny" style="margin-top:16px">El botón abre el chat de WhatsApp con el mensaje de confirmación ya escrito: solo debes enviarlo. <a id="chatLink" href="#" style="color:var(--lavender);text-decoration:underline">También puedes escribirnos aquí</a></p></div>
 </section>
 </main>
 
@@ -306,18 +303,16 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 <audio id="bg-music" src="assets/cancion.mp3" loop preload="auto"></audio>
 <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="Reproducir música: Disfruto, de Carla Morrison"><span class="disc" aria-hidden="true">♪</span></button>
 <div class="music-hint" id="musicHint" role="status" aria-live="polite"></div>
-<div class="copy-toast" id="copyToast" role="status" aria-live="polite"></div>
 
 <script>
 'use strict';
 // CONFIG → personaliza aquí:
-// 1) whatsappGrupo: enlace de invitación al grupo (WhatsApp → Grupo → Invitar mediante enlace).
-//    Es el destino del botón "Confirmar asistencia".
-// 2) whatsappNumero / whatsappTexto: chat directo opcional (botón secundario
-//    "Envía tu confirmación aquí"); teléfono con código de país, sin «+» ni «00».
+// 1) whatsappNumero: teléfono que recibe la confirmación (con código de país; se
+//    admiten «00» inicial o «+», se limpian solos).
+// 2) whatsappTexto: mensaje que llega YA ESCRITO al abrir el chat; solo pulsar enviar.
 // 3) cancion: ruta del audio (descarga tu tema de Carla Morrison y guárdalo como assets/cancion.mp3).
 // 4) cancionTitulo: nombre visible para lectores de pantalla y avisos.
-const CONFIG={whatsappNumero:'0051973670684',whatsappTexto:'Hola, confirmo mi asistencia a los XV años de Zoe Belén Vera Peña. Asistiremos 2 personas.',whatsappGrupo:'https://chat.whatsapp.com/CcjLAp8Vs3x2Zl1NP0ql4Z?s=sh&p=a&iam=2',cancion:'assets/cancion.mp3',cancionTitulo:'Disfruto · Carla Morrison'};
+const CONFIG={whatsappNumero:'0051973670684',whatsappTexto:'Hola, confirmo mi asistencia a los XV años de Zoe Belén Vera Peña. Asistiremos 2 personas.',cancion:'assets/cancion.mp3',cancionTitulo:'Disfruto · Carla Morrison'};
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const eventTime=new Date('2026-12-05T19:00:00-05:00').getTime();
 /* ===== CUENTA REGRESIVA ===== */
@@ -457,45 +452,20 @@ musicBtn.addEventListener('click',async()=>{try{
 }catch(err){showHint('No se pudo reproducir. Verifica que exista el archivo de la canción.');}});
 music.addEventListener('error',()=>{musicError=true;stopListening();musicBtn.classList.add('is-off');showHint('Falta la canción: guarda tu tema de Carla Morrison como assets/cancion.mp3.');});
 /* ===== CONFIRMACIÓN ===== */
-// El botón principal lleva al GRUPO de WhatsApp. Como los enlaces de grupo no
-// admiten mensaje pre-escrito, al tocar el botón el texto de confirmación se
-// COPIA al portapapeles y se avisa "pega en el grupo". Navegación en la MISMA
-// pestaña por JS: el método más confiable en móviles y navegadores internos.
-const confirmBtn=document.getElementById('confirmBtn'),chatLink=document.getElementById('chatLink'),rsvpStatus=document.getElementById('rsvpStatus'),copyToast=document.getElementById('copyToast');
+// El botón lleva al chat de WhatsApp del NÚMERO configurado, con el texto de
+// confirmación ya escrito (wa.me/?text= lo admite de forma nativa: no hay que
+// copiar ni pegar nada). Navegación en la MISMA pestaña por JS: el método más
+// confiable en móviles y navegadores internos.
+const confirmBtn=document.getElementById('confirmBtn'),chatLink=document.getElementById('chatLink'),rsvpStatus=document.getElementById('rsvpStatus');
 const waNumero=(CONFIG.whatsappNumero||'').replace(/\D/g,'').replace(/^0+/,'');
 const waTexto=encodeURIComponent(CONFIG.whatsappTexto||'');
-const textoConfirm=(CONFIG.whatsappTexto||'').trim();
 const waChat=waNumero?('https://wa.me/'+waNumero+'?text='+waTexto):'';
-const grupoUrl=(CONFIG.whatsappGrupo||'').trim();
 function abrir(url){window.location.href=url;}
-let toastTimer=null;
-function mostrarToast(msg){copyToast.textContent=msg;copyToast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>copyToast.classList.remove('show'),4500);}
-function copiarTexto(txt){
- if(navigator.clipboard&&navigator.clipboard.writeText){
-  return navigator.clipboard.writeText(txt).catch(()=>copiarFallback(txt));
- }
- return Promise.resolve(copiarFallback(txt));
+if(waChat){
+ confirmBtn.href=waChat;
+ confirmBtn.addEventListener('click',e=>{e.preventDefault();abrir(waChat);});
 }
-function copiarFallback(txt){
- const ta=document.createElement('textarea');ta.value=txt;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;opacity:0;top:0;left:0';document.body.appendChild(ta);ta.focus();ta.select();
- let ok=false;try{ok=document.execCommand('copy');}catch(e){}
- document.body.removeChild(ta);
- if(!ok)throw new Error('copy-failed');
-}
-if(grupoUrl||waChat){
- confirmBtn.href=grupoUrl||waChat;
- confirmBtn.addEventListener('click',e=>{
-  e.preventDefault();
-  const destino=grupoUrl||waChat;
-  if(textoConfirm){
-   Promise.resolve().then(()=>copiarTexto(textoConfirm))
-    .then(()=>mostrarToast('✓ Mensaje copiado. Al entrar al grupo, mantenlo pulsado y pega para confirmar'))
-    .catch(()=>{if(waChat){abrir(waChat);return;}mostrarToast('Entra al grupo y escribe tu confirmación');});
-   setTimeout(()=>abrir(destino),900);
-  }else{abrir(destino);}
- });
-}
-else{confirmBtn.addEventListener('click',e=>{e.preventDefault();rsvpStatus.classList.add('show');rsvpStatus.textContent='Falta configurar WhatsApp: edita CONFIG.whatsappGrupo en index.html.';});}
+else{confirmBtn.addEventListener('click',e=>{e.preventDefault();rsvpStatus.classList.add('show');rsvpStatus.textContent='Falta configurar WhatsApp: edita CONFIG.whatsappNumero en index.html.';});}
 if(chatLink){
  if(waChat){chatLink.href=waChat;chatLink.addEventListener('click',e=>{e.preventDefault();abrir(waChat);});}
  else{chatLink.parentElement.style.display='none';}
