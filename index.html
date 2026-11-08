@@ -190,6 +190,9 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 .personas input:focus-visible+span{box-shadow:0 0 0 3px rgba(201,195,221,.25)}
 .rsvp-ok{text-align:center;padding:6px 0 2px}
 .rsvp-ok .section-text{margin:10px 0 4px}
+.rsvp-no{margin:16px 0 0;text-align:center;font-size:12.5px;line-height:1.6;color:var(--muted)}
+.rsvp-no a{color:var(--lavender);text-decoration:underline;text-underline-offset:3px;transition:color var(--dur-xs)}
+.rsvp-no a:hover{color:var(--pearl)}
 /* Footer */
 .footer{padding:54px 12px 62px;text-align:center;border-top:1px solid var(--line);position:relative}
 .footer::before{content:"";position:absolute;left:50%;top:-24px;width:min(560px,100vw);height:190px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(113,97,135,.14),transparent 72%);pointer-events:none;z-index:-1}
@@ -342,7 +345,8 @@ a{color:inherit}button{cursor:pointer;font:inherit}
   <button class="btn primary reveal-item" id="confirmBtn" type="submit" style="--i:5">Confirmar asistencia</button>
   <div class="status" id="rsvpStatus" role="status" aria-live="polite"></div>
  </form>
- <div class="rsvp-ok" id="rsvpOk" hidden><div class="script shine" style="font-size:36px;line-height:1.2">¡Gracias!</div><p class="section-text" style="margin-top:10px">Tu asistencia quedó registrada. ¡Te espero el sábado 5 de diciembre! ♡</p><p class="tiny">¿Cambios de último momento? Escríbenos al <strong style="color:var(--pearl)">0051123456789</strong>.</p></div>
+ <p class="rsvp-no">¿No podrás asistir? Confírmalo también por WhatsApp al <a id="noAsistir" href="https://wa.me/51973670684?text=Hola%2C%20no%20podr%C3%A9%20asistir%20a%20los%20XV%20a%C3%B1os%20de%20Zoe%20Bel%C3%A9n%20Vera%20Pe%C3%B1a.%20Gracias%20por%20la%20invitaci%C3%B3n.">+51 973 670 684</a> ♡</p>
+ <div class="rsvp-ok" id="rsvpOk" hidden><div class="script shine" style="font-size:36px;line-height:1.2">¡Gracias!</div><p class="section-text" style="margin-top:10px">Tu asistencia quedó registrada. ¡Te espero el sábado 5 de diciembre! ♡</p><p class="tiny">¿Cambios de último momento o al final no puedes venir? Avísanos al <strong style="color:var(--pearl)">0051123456789</strong> o al <strong style="color:var(--pearl)">+51 973 670 684</strong>.</p></div>
 </div>
 </section>
 </main>
