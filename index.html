@@ -153,6 +153,43 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 /* Asistencia */
 .status{display:none;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:19px 0 0;background:rgba(255,255,255,.05);font-size:13px;color:var(--silver);text-align:left}
 .status.show{display:block}
+/* ===== FORMULARIO RSVP ===== */
+.rsvp-form{margin-top:20px;text-align:left;display:grid;gap:15px}
+.rsvp-form[hidden]{display:none} /* el display:grid no debe anular el atributo hidden */
+.field{display:grid;gap:6px}
+.field label,.flabel{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--lavender);font-weight:500}
+.field input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px;padding:13px 15px;color:var(--text);font:inherit;font-size:15px;outline:none;transition:border-color var(--dur-xs) var(--ease-out),box-shadow var(--dur-xs) var(--ease-out),background var(--dur-xs)}
+.field input::placeholder{color:rgba(185,181,199,.55)}
+.field input:focus{border-color:rgba(201,195,221,.65);background:rgba(255,255,255,.09);box-shadow:0 0 0 3px rgba(201,195,221,.14),0 0 18px rgba(201,195,221,.12)}
+.field .err{display:none;color:#e7a6b8;font-size:12px;line-height:1.4}
+.field.invalid input{border-color:rgba(231,166,184,.75);box-shadow:0 0 0 3px rgba(231,166,184,.12)}
+.field.invalid .err{display:block}
+/* Prefijo +51 (invitados de Perú) */
+.phone-wrap{display:flex;gap:8px}
+.phone-prefix{display:flex;align-items:center;flex:0 0 auto;padding:0 13px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.08);color:var(--lavender);font-size:14px;font-weight:500;letter-spacing:.04em;transition:border-color var(--dur-xs),background var(--dur-xs),color var(--dur-xs)}
+.phone-wrap:focus-within .phone-prefix{border-color:rgba(201,195,221,.65);background:rgba(224,187,102,.14);color:var(--pearl)}
+.phone-wrap input{flex:1;min-width:0}
+/* Animaciones dinámicas del formulario */
+@keyframes shake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}30%,50%,70%{transform:translateX(-3px)}40%,60%{transform:translateX(3px)}}
+.field.shake{animation:shake .45s var(--ease-soft)}
+@keyframes chipPop{0%{transform:scale(1)}40%{transform:scale(.93)}72%{transform:scale(1.05)}100%{transform:scale(1)}}
+.personas span.pop{animation:chipPop .38s var(--ease-out)}
+@keyframes okIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.rsvp-ok{animation:okIn .6s var(--ease-out) both}
+.rsvp-ok .script{animation:popIn 650ms var(--ease-out) 120ms both}
+@keyframes burstOut{0%{transform:translate(-50%,-50%) scale(.2);opacity:1}70%{opacity:.9}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.15);opacity:0}}
+.burst{position:relative;pointer-events:none}
+.burst i{position:absolute;left:50%;top:26%;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle,#ffffff,rgba(233,199,124,.95) 46%,rgba(224,187,102,0) 72%);animation:burstOut 1.05s var(--ease-out) forwards;animation-delay:calc(var(--d,0)*28ms)}
+.btn .spin{display:inline-block;animation:discSpin 1.1s linear infinite;margin-right:8px;font-size:13px}
+.btn.is-sending{pointer-events:none;opacity:.85}
+.personas{display:flex;gap:10px}
+.personas label{flex:1;position:relative;cursor:pointer}
+.personas input{position:absolute;opacity:0;pointer-events:none}
+.personas span{display:flex;align-items:center;justify-content:center;min-height:46px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.05);color:var(--silver);font-size:13px;letter-spacing:.06em;transition:border-color var(--dur-xs),background var(--dur-xs),color var(--dur-xs),box-shadow var(--dur-xs)}
+.personas input:checked+span{border-color:rgba(224,187,102,.55);background:rgba(224,187,102,.12);color:var(--pearl);box-shadow:0 0 16px rgba(224,187,102,.18)}
+.personas input:focus-visible+span{box-shadow:0 0 0 3px rgba(201,195,221,.25)}
+.rsvp-ok{text-align:center;padding:6px 0 2px}
+.rsvp-ok .section-text{margin:10px 0 4px}
 /* Footer */
 .footer{padding:54px 12px 62px;text-align:center;border-top:1px solid var(--line);position:relative}
 .footer::before{content:"";position:absolute;left:50%;top:-24px;width:min(560px,100vw);height:190px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(113,97,135,.14),transparent 72%);pointer-events:none;z-index:-1}
@@ -291,10 +328,22 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 
 <section class="section wrap reveal section-glow" id="confirmar">
  <span class="eyebrow">Tu presencia es importante</span><h2 class="shine">Asistencia</h2>
- <div class="card"><span class="sparkle" style="right:18px;top:16px;--s:11px;--d:1.9s;--t:7.5s" aria-hidden="true"></span><p class="section-text">¡Te espero para celebrar juntos!</p>
- <a class="btn primary" id="confirmBtn" href="#">Confirmar asistencia ↗</a>
- <div class="status" id="rsvpStatus" role="status" aria-live="polite"></div>
- <p class="tiny" style="margin-top:16px">El botón abre el chat de WhatsApp con el mensaje de confirmación ya escrito: solo debes enviarlo. <a id="chatLink" href="#" style="color:var(--lavender);text-decoration:underline">También puedes escribirnos aquí</a></p></div>
+ <div class="card"><span class="sparkle" style="right:18px;top:16px;--s:11px;--d:1.9s;--t:7.5s" aria-hidden="true"></span><p class="section-text">¡Te espero para celebrar juntos! Confirma tu asistencia aquí:</p>
+ <form class="rsvp-form" id="rsvpForm" novalidate>
+  <div class="field reveal-item" style="--i:0"><label for="fNombre">Nombre</label><input id="fNombre" type="text" autocomplete="given-name" placeholder="Tu nombre" required><small class="err">Escribe tu nombre.</small></div>
+  <div class="field reveal-item" style="--i:1"><label for="fApellido">Apellido</label><input id="fApellido" type="text" autocomplete="family-name" placeholder="Tu apellido" required><small class="err">Escribe tu apellido.</small></div>
+  <div class="field reveal-item" style="--i:2"><label for="fCelular">Celular</label><div class="phone-wrap"><span class="phone-prefix" aria-hidden="true">+51</span><input id="fCelular" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="987 654 321" maxlength="11" required></div><small class="err">Número peruano: 9 dígitos que empiezan con 9.</small></div>
+  <div class="field reveal-item" style="--i:3"><label for="fCorreo">Correo electrónico</label><input id="fCorreo" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" required><small class="err">Escribe un correo válido.</small></div>
+  <div class="field reveal-item" style="--i:4"><span class="flabel">¿Cuántas personas vienen?</span>
+   <div class="personas" role="radiogroup" aria-label="Cantidad de personas">
+    <label><input type="radio" name="personas" value="1"><span>1 persona</span></label>
+    <label><input type="radio" name="personas" value="2" checked><span>2 personas</span></label>
+   </div></div>
+  <button class="btn primary reveal-item" id="confirmBtn" type="submit" style="--i:5">Confirmar asistencia</button>
+  <div class="status" id="rsvpStatus" role="status" aria-live="polite"></div>
+ </form>
+ <div class="rsvp-ok" id="rsvpOk" hidden><div class="script shine" style="font-size:36px;line-height:1.2">¡Gracias!</div><p class="section-text" style="margin-top:10px">Tu asistencia quedó registrada. ¡Te espero el sábado 5 de diciembre! ♡</p><p class="tiny">¿Cambios de último momento? Escríbenos al <strong style="color:var(--pearl)">0051123456789</strong>.</p></div>
+</div>
 </section>
 </main>
 
@@ -307,12 +356,11 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 <script>
 'use strict';
 // CONFIG → personaliza aquí:
-// 1) whatsappNumero: teléfono que recibe la confirmación (con código de país; se
-//    admiten «00» inicial o «+», se limpian solos).
-// 2) whatsappTexto: mensaje que llega YA ESCRITO al abrir el chat; solo pulsar enviar.
-// 3) cancion: ruta del audio (descarga tu tema de Carla Morrison y guárdalo como assets/cancion.mp3).
-// 4) cancionTitulo: nombre visible para lectores de pantalla y avisos.
-const CONFIG={whatsappNumero:'0051973670684',whatsappTexto:'Hola, confirmo mi asistencia a los XV años de Zoe Belén Vera Peña. Asistiremos 2 personas.',cancion:'assets/cancion.mp3',cancionTitulo:'Disfruto · Carla Morrison'};
+// 1) rsvpUrl: URL «.../exec» de tu Google Apps Script (ya configurada).
+//    Si cambias de cuenta/hoja, reemplaza la URL completa.
+// 2) cancion: ruta del audio (descarga tu tema de Carla Morrison y guárdalo como assets/cancion.mp3).
+// 3) cancionTitulo: nombre visible para lectores de pantalla y avisos.
+const CONFIG={rsvpUrl:'https://script.google.com/macros/s/AKfycbxzJCL5jC3cjzWkiLEh6v2QzClSIdYmLGJ4EEV5ZVc0ZEPXfGP81lZ5gdsvAzvGqktGzQ/exec',cancion:'assets/cancion.mp3',cancionTitulo:'Disfruto · Carla Morrison'};
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const eventTime=new Date('2026-12-05T19:00:00-05:00').getTime();
 /* ===== CUENTA REGRESIVA ===== */
@@ -451,24 +499,89 @@ musicBtn.addEventListener('click',async()=>{try{
  else{userPaused=true;music.pause();setBtn(false);}
 }catch(err){showHint('No se pudo reproducir. Verifica que exista el archivo de la canción.');}});
 music.addEventListener('error',()=>{musicError=true;stopListening();musicBtn.classList.add('is-off');showHint('Falta la canción: guarda tu tema de Carla Morrison como assets/cancion.mp3.');});
-/* ===== CONFIRMACIÓN ===== */
-// El botón lleva al chat de WhatsApp del NÚMERO configurado, con el texto de
-// confirmación ya escrito (wa.me/?text= lo admite de forma nativa: no hay que
-// copiar ni pegar nada). Navegación en la MISMA pestaña por JS: el método más
-// confiable en móviles y navegadores internos.
-const confirmBtn=document.getElementById('confirmBtn'),chatLink=document.getElementById('chatLink'),rsvpStatus=document.getElementById('rsvpStatus');
-const waNumero=(CONFIG.whatsappNumero||'').replace(/\D/g,'').replace(/^0+/,'');
-const waTexto=encodeURIComponent(CONFIG.whatsappTexto||'');
-const waChat=waNumero?('https://wa.me/'+waNumero+'?text='+waTexto):'';
-function abrir(url){window.location.href=url;}
-if(waChat){
- confirmBtn.href=waChat;
- confirmBtn.addEventListener('click',e=>{e.preventDefault();abrir(waChat);});
+/* ===== CONFIRMACIÓN (formulario + Google Apps Script) ===== */
+// El formulario envía los datos por HTTP POST al Apps Script (CONFIG.rsvpUrl).
+// Clave anti-CORS: se envía con Content-Type text/plain (el que fetch usa por
+// defecto para un string), que es una «solicitud simple» → el navegador NO hace
+// preflight (OPTIONS), que Apps Script no sabría responder. Apps Script responde
+// con una redirección a googleusercontent.com que sirve la respuesta con CORS
+// abierto; fetch la sigue y puede leer el JSON. Si el navegador aún se queja,
+// hay un plan B con mode:'no-cors' (la confirmación igual llega al Sheets).
+const rsvpForm=document.getElementById('rsvpForm'),rsvpOk=document.getElementById('rsvpOk'),rsvpStatus=document.getElementById('rsvpStatus'),confirmBtn=document.getElementById('confirmBtn');
+const CEL_RE=/^9\d{8}$/,MAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function setErr(input,bad){input.closest('.field').classList.toggle('invalid',bad);}
+function validarForm(){
+ const nombre=document.getElementById('fNombre'),apellido=document.getElementById('fApellido'),celular=document.getElementById('fCelular'),correo=document.getElementById('fCorreo');
+ const vCel=celular.value.replace(/\D/g,''),vCorreo=correo.value.trim();
+ const pers=document.querySelector('input[name="personas"]:checked');
+ if(!pers){return null;}
+ let ok=true;
+ setErr(nombre,!(nombre.value.trim().length>=2));ok=ok&&nombre.value.trim().length>=2;
+ setErr(apellido,!(apellido.value.trim().length>=2));ok=ok&&apellido.value.trim().length>=2;
+ setErr(celular,!CEL_RE.test(vCel));ok=ok&&CEL_RE.test(vCel);
+ setErr(correo,!MAIL_RE.test(vCorreo));ok=ok&&MAIL_RE.test(vCorreo);
+ /* personas siempre está marcada (radio «1» preseleccionada) */
+ if(!ok){const inv=rsvpForm.querySelector('.field.invalid input');if(inv)inv.focus();return null;}
+ return {nombre:nombre.value.trim(),apellido:apellido.value.trim(),celular:vCel,correo:vCorreo,personas:Number(pers.value)};
 }
-else{confirmBtn.addEventListener('click',e=>{e.preventDefault();rsvpStatus.classList.add('show');rsvpStatus.textContent='Falta configurar WhatsApp: edita CONFIG.whatsappNumero en index.html.';});}
-if(chatLink){
- if(waChat){chatLink.href=waChat;chatLink.addEventListener('click',e=>{e.preventDefault();abrir(waChat);});}
- else{chatLink.parentElement.style.display='none';}
+rsvpForm.addEventListener('input',e=>{if(e.target.matches('input'))setErr(e.target,false);});
+/* Celular peruano: solo 9 dígitos, auto-formato 987 654 321 */
+const fCelular=document.getElementById('fCelular');
+fCelular.addEventListener('input',()=>{
+ const d=fCelular.value.replace(/\D/g,'').slice(0,9);
+ fCelular.value=d.replace(/^(\d{1,3})(\d{0,3})(\d{0,3}).*/,(m,a,b,c)=>c?a+' '+b+' '+c:(b?a+' '+b:a));
+});
+function mostrarEstado(msg,esError){rsvpStatus.classList.add('show');rsvpStatus.textContent=msg;rsvpStatus.style.color=esError?'#e7a6b8':'var(--silver)';}
+/* Explosión de destellos dorados al confirmar */
+function burst(){
+ if(reducedMotion)return;
+ const b=document.createElement('div');b.className='burst';b.setAttribute('aria-hidden','true');
+ for(let i=0;i<16;i++){
+  const s=document.createElement('i');
+  const ang=Math.random()*Math.PI*2,dist=46+Math.random()*80;
+  s.style.setProperty('--dx',Math.round(Math.cos(ang)*dist)+'px');
+  s.style.setProperty('--dy',Math.round(Math.sin(ang)*dist*.75)+'px');
+  s.style.setProperty('--d',i);
+  b.appendChild(s);
+ }
+ rsvpOk.appendChild(b);setTimeout(()=>b.remove(),1900);
 }
+function enviarRsvp(data){
+ confirmBtn.disabled=true;confirmBtn.classList.add('is-sending');
+ confirmBtn.innerHTML='<span class="spin">✦</span>Enviando';rsvpStatus.classList.remove('show');
+ const restaurar=()=>{confirmBtn.disabled=false;confirmBtn.classList.remove('is-sending');confirmBtn.textContent='Confirmar asistencia';};
+ function planB(){
+  /* Respuesta opaca: no se puede leer el JSON, pero el POST sí llega al Sheets */
+  try{fetch(CONFIG.rsvpUrl,{method:'POST',mode:'no-cors',body:JSON.stringify(data)});}catch(_){}
+  rsvpForm.hidden=true;rsvpOk.hidden=false;restaurar();
+ }
+ if(!CONFIG.rsvpUrl){restaurar();mostrarEstado('La confirmación en línea aún no está activa. Configura CONFIG.rsvpUrl según el LEEME.txt.',true);return;}
+ fetch(CONFIG.rsvpUrl,{method:'POST',body:JSON.stringify(data)}) /* sin Content-Type custom → text/plain, sin preflight */
+  .then(r=>r.json())
+  .then(j=>{
+   restaurar();
+   if(j.status==='ok'){rsvpForm.hidden=true;rsvpOk.hidden=false;burst();}
+   else if(j.status==='duplicado'){mostrarEstado('Ya habías confirmado antes con este correo o celular. ¡No hace falta repetirlo! ♡');}
+   else{mostrarEstado(j.message||'No se pudo registrar. Inténtalo de nuevo en unos minutos.',true);}
+  })
+  .catch(()=>{restaurar();planB();});
+}
+rsvpForm.addEventListener('change',e=>{
+ if(e.target.name==='personas'){
+  const sp=e.target.closest('label').querySelector('span');
+  rsvpForm.querySelectorAll('.personas span.pop').forEach(x=>x.classList.remove('pop'));
+  sp.classList.remove('pop');void sp.offsetWidth;sp.classList.add('pop');
+ }
+});
+rsvpForm.addEventListener('submit',e=>{
+ e.preventDefault();
+ const data=validarForm();
+ if(!data){
+  mostrarEstado('Revisa los campos marcados, por favor.',true);
+  rsvpForm.querySelectorAll('.field.invalid').forEach(f=>{f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');});
+  return;
+ }
+ enviarRsvp(data);
+});
 </script>
 </body></html>
