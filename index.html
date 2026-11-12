@@ -188,6 +188,12 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 .personas span{display:flex;align-items:center;justify-content:center;min-height:46px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.05);color:var(--silver);font-size:13px;letter-spacing:.06em;transition:border-color var(--dur-xs),background var(--dur-xs),color var(--dur-xs),box-shadow var(--dur-xs)}
 .personas input:checked+span{border-color:rgba(224,187,102,.55);background:rgba(224,187,102,.12);color:var(--pearl);box-shadow:0 0 16px rgba(224,187,102,.18)}
 .personas input:focus-visible+span{box-shadow:0 0 0 3px rgba(201,195,221,.25)}
+/* Acompañante (aparece al elegir 2 personas) */
+.acompanante-box{display:grid;gap:15px;padding:16px;border:1px dashed rgba(201,195,221,.38);border-radius:16px;background:rgba(224,187,102,.05);animation:blockIn .45s var(--ease-out)}
+.acompanante-box[hidden]{display:none} /* el display:grid no debe anular hidden */
+.acompanante-box .flabel{color:rgba(233,205,140,.9)}
+.acompanante-box .flabel::before{content:'✦ ';color:rgba(224,187,102,.7)}
+@keyframes blockIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 .rsvp-ok{text-align:center;padding:6px 0 2px}
 .rsvp-ok .section-text{margin:10px 0 4px}
 .rsvp-no{margin:16px 0 0;text-align:center;font-size:12.5px;line-height:1.6;color:var(--muted)}
@@ -336,13 +342,20 @@ a{color:inherit}button{cursor:pointer;font:inherit}
   <div class="field reveal-item" style="--i:0"><label for="fNombre">Nombre</label><input id="fNombre" type="text" autocomplete="given-name" placeholder="Tu nombre" required><small class="err">Escribe tu nombre.</small></div>
   <div class="field reveal-item" style="--i:1"><label for="fApellido">Apellido</label><input id="fApellido" type="text" autocomplete="family-name" placeholder="Tu apellido" required><small class="err">Escribe tu apellido.</small></div>
   <div class="field reveal-item" style="--i:2"><label for="fCelular">Celular</label><div class="phone-wrap"><span class="phone-prefix" aria-hidden="true">+51</span><input id="fCelular" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="987 654 321" maxlength="11" required></div><small class="err">Número peruano: 9 dígitos que empiezan con 9.</small></div>
-  <div class="field reveal-item" style="--i:3"><label for="fCorreo">Correo electrónico</label><input id="fCorreo" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" required><small class="err">Escribe un correo válido.</small></div>
-  <div class="field reveal-item" style="--i:4"><span class="flabel">¿Cuántas personas vienen?</span>
+  <div class="field reveal-item" style="--i:3"><span class="flabel">¿Cuántas personas vienen?</span>
    <div class="personas" role="radiogroup" aria-label="Cantidad de personas">
     <label><input type="radio" name="personas" value="1"><span>1 persona</span></label>
     <label><input type="radio" name="personas" value="2" checked><span>2 personas</span></label>
    </div></div>
-  <button class="btn primary reveal-item" id="confirmBtn" type="submit" style="--i:5">Confirmar asistencia</button>
+  <div class="acompanante-box" id="acompananteBox">
+   <div class="field"><label for="fAcompanante">Nombre de tu acompañante</label><input id="fAcompanante" type="text" autocomplete="off" placeholder="Nombre y apellido" required><small class="err">Escribe el nombre de tu acompañante.</small></div>
+   <div class="field"><span class="flabel">Género de tu acompañante</span>
+    <div class="personas" role="radiogroup" aria-label="Género del acompañante">
+     <label><input type="radio" name="genero" value="Femenino"><span>♀ Femenino</span></label>
+     <label><input type="radio" name="genero" value="Masculino"><span>♂ Masculino</span></label>
+    </div><small class="err">Elige el género de tu acompañante.</small></div>
+  </div>
+  <button class="btn primary reveal-item" id="confirmBtn" type="submit" style="--i:4">Confirmar asistencia</button>
   <div class="status" id="rsvpStatus" role="status" aria-live="polite"></div>
  </form>
  <p class="rsvp-no">¿No podrás asistir? Confírmalo también por WhatsApp al <a id="noAsistir" href="https://wa.me/51973670684?text=Hola%2C%20no%20podr%C3%A9%20asistir%20a%20los%20XV%20a%C3%B1os%20de%20Zoe%20Bel%C3%A9n%20Vera%20Pe%C3%B1a.%20Gracias%20por%20la%20invitaci%C3%B3n.">+51 973 670 684</a> ♡</p>
@@ -364,7 +377,7 @@ a{color:inherit}button{cursor:pointer;font:inherit}
 //    Si cambias de cuenta/hoja, reemplaza la URL completa.
 // 2) cancion: ruta del audio (descarga tu tema de Carla Morrison y guárdalo como assets/cancion.mp3).
 // 3) cancionTitulo: nombre visible para lectores de pantalla y avisos.
-const CONFIG={rsvpUrl:'https://script.google.com/macros/s/AKfycbxzJCL5jC3cjzWkiLEh6v2QzClSIdYmLGJ4EEV5ZVc0ZEPXfGP81lZ5gdsvAzvGqktGzQ/exec',cancion:'assets/cancion.mp3',cancionTitulo:'Disfruto · Carla Morrison'};
+const CONFIG={rsvpUrl:'https://script.google.com/macros/s/AKfycbwl5GGg-IEMcAQzxx9bar4PN3gYpsoS3MbvPiI0cTts5W3lA1MaTUE5GKdpvO2M5ea5/exec',cancion:'assets/cancion.mp3',cancionTitulo:'Disfruto · Carla Morrison'};
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const eventTime=new Date('2026-12-05T19:00:00-05:00').getTime();
 /* ===== CUENTA REGRESIVA ===== */
@@ -512,21 +525,29 @@ music.addEventListener('error',()=>{musicError=true;stopListening();musicBtn.cla
 // abierto; fetch la sigue y puede leer el JSON. Si el navegador aún se queja,
 // hay un plan B con mode:'no-cors' (la confirmación igual llega al Sheets).
 const rsvpForm=document.getElementById('rsvpForm'),rsvpOk=document.getElementById('rsvpOk'),rsvpStatus=document.getElementById('rsvpStatus'),confirmBtn=document.getElementById('confirmBtn');
-const CEL_RE=/^9\d{8}$/,MAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const CEL_RE=/^9\d{8}$/,GEN_RE=/^(Femenino|Masculino)$/;
 function setErr(input,bad){input.closest('.field').classList.toggle('invalid',bad);}
 function validarForm(){
- const nombre=document.getElementById('fNombre'),apellido=document.getElementById('fApellido'),celular=document.getElementById('fCelular'),correo=document.getElementById('fCorreo');
- const vCel=celular.value.replace(/\D/g,''),vCorreo=correo.value.trim();
+ const nombre=document.getElementById('fNombre'),apellido=document.getElementById('fApellido'),celular=document.getElementById('fCelular');
+ const vCel=celular.value.replace(/\D/g,'');
  const pers=document.querySelector('input[name="personas"]:checked');
  if(!pers){return null;}
+ const conAcomp=pers.value==='2';
+ const acomp=document.getElementById('fAcompanante'),gen=document.querySelector('input[name="genero"]:checked');
  let ok=true;
  setErr(nombre,!(nombre.value.trim().length>=2));ok=ok&&nombre.value.trim().length>=2;
  setErr(apellido,!(apellido.value.trim().length>=2));ok=ok&&apellido.value.trim().length>=2;
  setErr(celular,!CEL_RE.test(vCel));ok=ok&&CEL_RE.test(vCel);
- setErr(correo,!MAIL_RE.test(vCorreo));ok=ok&&MAIL_RE.test(vCorreo);
+ if(conAcomp){ /* con 2 personas: nombre y género del acompañante obligatorios */
+  const vAcomp=acomp.value.trim();
+  setErr(acomp,!(vAcomp.length>=2));ok=ok&&vAcomp.length>=2;
+  const gOk=!!(gen&&GEN_RE.test(gen.value));
+  setErr(document.querySelector('input[name="genero"]'),!gOk);
+  ok=ok&&gOk;
+ }
  /* personas siempre está marcada (radio «1» preseleccionada) */
  if(!ok){const inv=rsvpForm.querySelector('.field.invalid input');if(inv)inv.focus();return null;}
- return {nombre:nombre.value.trim(),apellido:apellido.value.trim(),celular:vCel,correo:vCorreo,personas:Number(pers.value)};
+ return {nombre:nombre.value.trim(),apellido:apellido.value.trim(),celular:vCel,personas:Number(pers.value),acompanante:conAcomp?acomp.value.trim():'',genero:conAcomp&&gen?gen.value:''};
 }
 rsvpForm.addEventListener('input',e=>{if(e.target.matches('input'))setErr(e.target,false);});
 /* Celular peruano: solo 9 dígitos, auto-formato 987 654 321 */
@@ -571,10 +592,22 @@ function enviarRsvp(data){
   .catch(()=>{restaurar();planB();});
 }
 rsvpForm.addEventListener('change',e=>{
- if(e.target.name==='personas'){
-  const sp=e.target.closest('label').querySelector('span');
+ const t=e.target;
+ if((t.name==='personas'||t.name==='genero')&&t.closest('label')){
+  const sp=t.closest('label').querySelector('span');
   rsvpForm.querySelectorAll('.personas span.pop').forEach(x=>x.classList.remove('pop'));
   sp.classList.remove('pop');void sp.offsetWidth;sp.classList.add('pop');
+ }
+ if(t.name==='personas'){
+  const box=document.getElementById('acompananteBox');
+  if(t.value==='2'){ /* muestra el bloque del acompañante con animación */
+   box.hidden=false;box.style.animation='none';void box.offsetWidth;box.style.animation='';
+  }else{ /* 1 persona: oculta y limpia los datos del acompañante */
+   box.hidden=true;
+   const a=document.getElementById('fAcompanante');a.value='';setErr(a,false);
+   rsvpForm.querySelectorAll('input[name="genero"]').forEach(g=>{g.checked=false;});
+   setErr(document.querySelector('input[name="genero"]'),false);
+  }
  }
 });
 rsvpForm.addEventListener('submit',e=>{
